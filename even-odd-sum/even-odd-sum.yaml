@@ -6,7 +6,7 @@ metadata:
 spec:
   vertices:
     # Pipeline input, expects to receive integer numbers.
-    - name:
+    - name: in
       source:
         http:
           service: true
