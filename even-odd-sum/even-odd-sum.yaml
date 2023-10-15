@@ -4,10 +4,12 @@ metadata:
   name: even-odd-sum
 spec:
   vertices:
-    - name: in
+    # Pipeline input, expects to receive integer numbers.
+    - name:
       source:
         http:
           service: true
+    # Map vertex, keying, give each number key, even or odd
     - name: atoi
       scale:
         min: 1
@@ -15,6 +17,7 @@ spec:
         container:
           # Tell the input number is even or odd, see https://github.com/numaproj/numaflow-go/tree/main/pkg/mapper/examples/even_odd
           image: quay.io/numaio/numaflow-go/map-even-odd:v0.5.0
+    # Compute the sum of the numbers of each key (even and odd)
     - name: compute-sum
       udf:
         container:
@@ -23,12 +26,14 @@ spec:
         groupBy:
           window:
             fixed:
+              # Every 5 seconds
               length: 5s
           keyed: true
           storage:
             persistentVolumeClaim:
               volumeSize: 1Gi
               accessMode: ReadWriteOnce
+    # A log sink to display
     - name: sink
       scale:
         min: 1
