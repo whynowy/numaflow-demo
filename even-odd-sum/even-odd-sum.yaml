@@ -10,7 +10,7 @@ spec:
       source:
         http:
           service: true
-    # Map vertex, keying, give each number key, even or odd
+    # Map vertex, keying, give each number a key, even or odd
     - name: atoi
       scale:
         min: 1
