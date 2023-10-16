@@ -2,11 +2,13 @@ apiVersion: numaflow.numaproj.io/v1alpha1
 kind: Pipeline
 metadata:
   # Reduce use case, group by key, with fixed window.
-  name: even-odd-sum
+  name: even-odd-counter
 spec:
   vertices:
     # Pipeline input, expects to receive integer numbers.
     - name: in
+      scale:
+        min: 1
       source:
         http:
           service: true
@@ -17,24 +19,23 @@ spec:
       udf:
         container:
           image: quay.io/numaio/numaflow-go/map-even-odd:v0.5.0
-    # Reduce vertex, compute the sum of the numbers of each key (even and odd)
-    - name: compute-sum
+    # Reduce vertex, count the numbers of each key (even and odd)
+    - name: count
+      partitions: 1
       udf:
         container:
-          image: quay.io/numaio/numaflow-go/reduce-sum:v0.5.0
+          image: quay.io/numaio/numaflow-go/reduce-counter:v0.5.0
         groupBy:
           window:
             fixed:
-              # Every 5 seconds
-              length: 5s
+              length: 10s
           keyed: true
           storage:
             persistentVolumeClaim:
-              volumeSize: 50Mi
+              volumeSize: 90Mi
               accessMode: ReadWriteOnce
-      partitions: 2
     # A log sink to display the results
-    - name: sink
+    - name: log
       scale:
         min: 1
       sink:
@@ -43,6 +44,6 @@ spec:
     - from: in
       to: atoi
     - from: atoi
-      to: compute-sum
-    - from: compute-sum
-      to: sink
+      to: count
+    - from: count
+      to: log
