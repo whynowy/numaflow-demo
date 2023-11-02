@@ -1,9 +1,11 @@
+import logging
 import sys
 
 from pynumaflow.mapper import Messages, Message, Datum, Mapper
 from transformers import pipeline
 import json
-
+import logging
+import uuid
 
 class SentimentAnalyzer:
     def __init__(self):
@@ -16,10 +18,14 @@ class SentimentAnalyzer:
             messages.append(Message.to_drop())
             return messages
 
-        output = {}
+        output = {'id': str(uuid.uuid4())}
+        logging.info("%s - Received msg: %s", output['id'], strs)
+
         sentiment = self.analyzer(strs)
         output['text'] = strs
         output['sentiment'] = sentiment[0]['label']
+
+        logging.info("%s - Sentiment analysis: %s", output['id'], output)
         output = json.dumps(output).encode("utf-8")
         messages.append(Message(output, keys=keys))
         return messages
@@ -32,9 +38,11 @@ class SentimentAnalyzer:
             messages.append(Message.to_drop())
             return messages
 
+        logging.info("%s - Received msg: %s", output['id'], output)
         sentiment = output['sentiment']
-        output = json.dumps(output).encode("utf-8")
+        logging.info("%s - Sending msg to %s sink", output['id'], sentiment)
 
+        output = json.dumps(output).encode("utf-8")
         messages.append(Message(keys=keys, value=output, tags=[sentiment]))
         return messages
 

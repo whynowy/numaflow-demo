@@ -16,16 +16,23 @@ spec:
         min: 1
       udf:
         container:
-          image: quay.io/nkoppisetty/numaflow-demo/sentiment-analysis:v0.0.2
+          image: quay.io/nkoppisetty/numaflow-demo/sentiment-analysis:v0.0.3
           imagePullPolicy: IfNotPresent
-
+          args:
+            - python
+            - udf.py
+            - inference
     - name: postprocess
       scale:
         min: 1
       udf:
         container:
-          image: quay.io/nkoppisetty/numaflow-demo/sentiment-analysis:v0.0.2
+          image: quay.io/nkoppisetty/numaflow-demo/sentiment-analysis:v0.0.3
           imagePullPolicy: IfNotPresent
+          args:
+            - python
+            - udf.py
+            - postprocess
     # Display the positive sentiment in the log
     - name: positive-sink
       scale:
