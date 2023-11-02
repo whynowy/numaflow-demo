@@ -16,7 +16,7 @@ spec:
         min: 1
       udf:
         container:
-          image: quay.io/nkoppisetty/numaflow-demo/sentiment-analysis:v0.0.3
+          image: quay.io/nkoppisetty/numaflow-demo/sentiment-analysis:v0.0.4
           imagePullPolicy: IfNotPresent
           args:
             - python
@@ -27,7 +27,7 @@ spec:
         min: 1
       udf:
         container:
-          image: quay.io/nkoppisetty/numaflow-demo/sentiment-analysis:v0.0.3
+          image: quay.io/nkoppisetty/numaflow-demo/sentiment-analysis:v0.0.4
           imagePullPolicy: IfNotPresent
           args:
             - python

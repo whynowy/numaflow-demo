@@ -1,11 +1,11 @@
-import logging
 import sys
+import uuid
+import json
+import logging
 
 from pynumaflow.mapper import Messages, Message, Datum, Mapper
 from transformers import pipeline
-import json
-import logging
-import uuid
+
 
 class SentimentAnalyzer:
     def __init__(self):
@@ -49,6 +49,8 @@ class SentimentAnalyzer:
 
 if __name__ == "__main__":
     handler = sys.argv[1]
+    logging.info("Starting handler: %s", handler)
+
     sa = SentimentAnalyzer()
     if handler == "inference":
         grpc_server = Mapper(handler=sa.inference)

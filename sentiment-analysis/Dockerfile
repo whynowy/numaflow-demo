@@ -50,3 +50,5 @@ RUN chmod +x entry.sh
 
 ENTRYPOINT ["/dumb-init", "--"]
 CMD ["/app/entry.sh"]
+
+EXPOSE 5000
